@@ -13,6 +13,10 @@ public class GroupCreationTests {
     wd = new FirefoxDriver();
     wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     wd.get("http://localhost/addressbook/group.php");
+    Login();
+  }
+
+  private void Login() {
     wd.findElement(By.name("user")).click();
     wd.findElement(By.name("user")).clear();
     wd.findElement(By.name("user")).sendKeys("admin");
@@ -23,8 +27,19 @@ public class GroupCreationTests {
 
   @Test
   public void testGroupCreation() throws Exception {
-    wd.findElement(By.linkText("groups")).click();
-    wd.findElement(By.name("new")).click();
+    gotoGroupPage("groups");
+    initGroupCreation("new");
+    fillGroupForm();
+    submitGroupCreation("submit");
+    returnToGroupPage("group page");
+    wd.findElement(By.linkText("Logout")).click();
+  }
+
+  private void submitGroupCreation(String submit) {
+    wd.findElement(By.name(submit)).click();
+  }
+
+  private void fillGroupForm() {
     wd.findElement(By.name("group_name")).click();
     wd.findElement(By.name("group_name")).clear();
     wd.findElement(By.name("group_name")).sendKeys("test1");
@@ -32,9 +47,18 @@ public class GroupCreationTests {
     wd.findElement(By.name("group_header")).sendKeys("tes2");
     wd.findElement(By.name("group_footer")).clear();
     wd.findElement(By.name("group_footer")).sendKeys("test3");
-    wd.findElement(By.name("submit")).click();
-    wd.findElement(By.linkText("group page")).click();
-    wd.findElement(By.linkText("Logout")).click();
+  }
+
+  private void initGroupCreation(String s) {
+    wd.findElement(By.name(s)).click();
+  }
+
+  private void gotoGroupPage(String groupPage) {
+    wd.findElement(By.linkText(groupPage)).click();
+  }
+
+  private void returnToGroupPage(String groups) {
+    wd.findElement(By.linkText(groups)).click();
   }
 
   @AfterMethod(alwaysRun = true)
